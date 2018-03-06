@@ -1,1 +1,1 @@
-web: weel
+web: ./weel
