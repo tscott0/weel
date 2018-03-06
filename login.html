@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>weel - login</title>
+<script type="text/javascript">
+window.onload = function () {
+    var username = document.getElementById("username");
+    var password = document.getElementById("password");
+    var form = document.getElementById("form");
+
+};
+</script>
+<style type="text/css">
+html {
+    overflow: hidden;
+}
+
+body {
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    background: #2b303b;
+}
+
+#form {
+    padding: 0 0.5em 0 0.5em;
+    margin:10em auto;
+    width: 20em;
+    overflow: hidden;
+}
+
+#username, #password {
+    background: #9098ad;
+    border-style: none;
+    font-size: 1em;
+    height: 2em;
+    width: 100%;
+    margin-top: 0.2em;
+}
+
+.label {
+    width: 100%;
+    color: #ebb322;
+    border-style: none;
+    font-family: monospace;
+    font-size: 1em;
+    margin-top: 1em;
+}
+
+.alert {
+    width: 100%;
+    border-style: none;
+    font-family: monospace;
+    color: #eb4022;
+    font-size: 2em;
+    text-align: center;
+    margin-top: 1.5em;
+}
+
+#login {
+    background: #414858;
+    color: #ebb322;
+    border-style: none;
+    font-family: monospace;
+    font-size: 1.5em;
+    height: 2em;
+    width: 100%;
+
+    margin-top: 1em;
+}
+
+</style>
+</head>
+<body>
+<form id="form" action="/login" method="POST">
+    <div class="label">Username:</div>
+    <input type="text" id="username" name="username" required/>
+
+    <div class="label">Password:</div>
+    <input type="password" id="password" name="password" required/>
+
+    <input type="submit" id="login" value="Login"/>
+
+    <!-- <div class="alert">Incorrect</div> -->
+</form>
+</body>
+</html>
