@@ -4,12 +4,11 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 )
-
-var addr = flag.String("addr", ":8080", "http service address")
 
 var store = sessions.NewCookieStore([]byte("mysecret")) // TODO: Read from environment
 
@@ -86,8 +85,15 @@ func main() {
 	r.HandleFunc("/login", login).Methods("POST")
 	r.Handle("/ws", hub)
 
-	log.Println("Starting server")
-	err := http.ListenAndServe(*addr, r)
+	var err error
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
+
+	log.Println("Starting server on port " + port)
+	err = http.ListenAndServe(":"+port, r)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
