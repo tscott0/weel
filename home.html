@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>weel</title>
+<script type="text/javascript">
+window.onload = function () {
+    var conn;
+    var msg = document.getElementById("msg");
+    var log = document.getElementById("log");
+    var form = document.getElementById("form");
+    var buttons = document.getElementById("buttons");
+    var logout = document.getElementById("logout");
+
+    function appendLog(item) {
+        var doScroll = log.scrollTop > log.scrollHeight - log.clientHeight - 1;
+        log.appendChild(item);
+        if (doScroll) {
+            log.scrollTop = log.scrollHeight - log.clientHeight;
+        }
+    };
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    };
+
+    function startWs() {
+        connected = false;
+        conn = new WebSocket("ws://" + document.location.host + "/ws");
+        conn.onopen = function (evt) {
+            var item = document.createElement("div");
+            item.innerHTML = "<b>Connected.</b>";
+            appendLog(item);
+            connected = true;
+        };
+
+        conn.onclose = function (evt) {
+            if (connected) {
+                var item = document.createElement("div");
+                item.innerHTML = "<b>Disconnected</b>";
+                appendLog(item);
+            }
+            setTimeout(function(){startWs()}, 10000);
+            connected = false;
+        };
+        
+        conn.onmessage = function (evt) {
+            var messages = evt.data.split('\n');
+            for (var i = 0; i < messages.length; i++) {
+                var item = document.createElement("div");
+                item.innerText = messages[i];
+                appendLog(item);
+            }
+        }
+
+        msg.focus();
+
+        return conn;
+    }
+
+    logout.onclick = function() {
+        document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        window.location.replace("/");
+    };
+
+    log.onclick = function() { msg.focus(); };
+    buttons.onclick = function() { msg.focus(); };
+    form.onclick = function() { msg.focus(); };
+
+    form.onsubmit = function () {
+        if (!conn) {
+            return false;
+        }
+        if (!msg.value) {
+            return false;
+        }
+        conn.send(msg.value);
+        msg.value = "";
+        msg.focus();
+        return false;
+    };
+
+    function xbtnClick(e) {
+        if (!conn) {
+            return false;
+        }
+
+        conn.send(e.toElement.value);
+        msg.focus();
+        return false;
+    };
+
+    Array.from(document.getElementsByClassName("xbtn")).forEach(element => {
+        element.onclick = xbtnClick;
+        console.log(element.value);
+    });
+
+    if (window["WebSocket"]) {
+        startWs();
+    } else {
+        var item = document.createElement("div");
+        item.innerHTML = "<b>Your browser does not support WebSockets.</b>";
+        appendLog(item);
+    }
+};
+</script>
+<style type="text/css">
+html {
+    overflow: hidden;
+}
+
+body {
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background: #2b303b;
+}
+
+#msg {
+    background: #9098ad;
+    border-style: none;
+    padding: 3px;
+}
+
+#log {
+    background: #414858;
+    margin: 0;
+    padding: 0.5em 0.5em 0.5em 0.5em;
+    position: absolute;
+    top: 0.5em;
+    left: 0.5em;
+    right: 20em;
+    bottom: 4em;
+    overflow: auto;
+    font-family: sans-serif;
+    color: #cbd0cd;
+}
+
+#form {
+    margin: 0;
+    position: absolute;
+    bottom: 0.5em;
+    left: 0.5em;
+    right: 20em;
+    overflow: hidden;
+}
+
+#menu {
+    margin: 0;
+    position: absolute;
+    bottom: 0.5em;
+    right: 0.5em;
+    overflow: hidden;
+}
+
+.menu-button {
+    background: #414858;
+    color: #ebb322;
+    border-style: none;
+    padding: 3px;
+    font-family: monospace;
+    font-size: 1.5em;
+    height: 2.5em;
+    width: 5em;
+}
+
+#buttons {
+    background: #414858;
+    margin: 0;
+    padding: 0.5em 0.5em 0.5em 0.5em;
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
+    bottom: 4em;
+    width: 18em;
+    overflow: auto;
+    font-family: sans-serif;
+    color: #cbd0cd;
+}
+
+.xbtn {
+    background: #414858;
+    color: #ebb322;
+    border-style: solid;
+    padding: 3px;
+    font-family: monospace;
+    font-size: 1em;
+    height: 5em;
+    width: 10.9em;
+    padding: 0em;
+    margin-bottom: 0.2em;
+}
+
+</style>
+</head>
+<body>
+<div id="log"></div>
+<form id="form">
+    <input class="menu-button" type="submit" id="send" value="Send" />
+    <input type="text" id="msg" size="64"/>
+</form>
+<div id="menu">
+    <button class="menu-button" id="logout">Logout</button>
+</div>
+<div id="buttons">
+    <button class="xbtn" value="YES 👍">YES 👍</button>
+    <button class="xbtn" value="NO 👎">NO 👎</button>
+    <button class="xbtn" value="Need gun 🔫">Need gun 🔫</button>
+    <button class="xbtn" value="Need bag 🎒">Need bag 🎒</button>
+    <button class="xbtn" value="Need armor 🛡️">Need armor 🛡️</button>
+    <button class="xbtn" value="Need vehicle 🚙">Need vehicle 🚙</button>
+
+
+    <button class="xbtn" value="Enemy close 😨">Enemy close 😨</button>
+    <button class="xbtn" value="Let's move">Let's Move</button>
+    <button class="xbtn" value="Reloading 🔫">Reloading 🔫</button>
+
+    <button class="xbtn" value="No time! 🕗">No time! 🕗</button>
+    <button class="xbtn" value="Winner Winner 🐔">Winner Winner🐔</button>
+
+    <button class="xbtn" value="Found a vehicle 🚙">Found a vehicle 🚙</button>
+    
+</form>
+</body>
+</html>
