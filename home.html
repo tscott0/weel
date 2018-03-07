@@ -26,10 +26,11 @@ window.onload = function () {
     function startWs() {
         connected = false;
         if (location.protocol == 'https:') {
-
+            conn = new WebSocket("wss://" + document.location.host + "/ws");
         } else {
             conn = new WebSocket("ws://" + document.location.host + "/ws");
         }
+
         conn.onopen = function (evt) {
             var item = document.createElement("div");
             item.innerHTML = "<b>Connected.</b>";
