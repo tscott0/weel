@@ -78,6 +78,7 @@ window.onload = function () {
         conn.send(msg.value);
         msg.value = "";
         log.focus();
+        log.blur();
         return false;
     };
 
@@ -87,6 +88,8 @@ window.onload = function () {
         }
 
         conn.send(e.text);
+        log.focus();
+        log.blur();
         return false;
     };
 
@@ -217,7 +220,7 @@ table {
                 <tr>
                     <td><a class="abtn" onclick="xbtnClick(this);">YES 👍</a></td>
                     <td><a class="abtn" onclick="xbtnClick(this);">NO 👎</a></td>
-                    <td><a class="abtn" onclick="xbtnClick(this);">MAYBE 🤷</a></td>
+                    <td><a class="abtn" onclick="xbtnClick(this);">¯\_(ツ)_/¯</a></td>
                 </tr>
                 <tr>
                     <td><a class="abtn" onclick="xbtnClick(this);">Need gun 🔫</a></td>
