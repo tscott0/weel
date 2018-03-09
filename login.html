@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <title>weel - login</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <script type="text/javascript">
 window.onload = function () {
     var username = document.getElementById("username");
@@ -10,6 +13,7 @@ window.onload = function () {
 
 };
 </script>
+
 <style type="text/css">
 html {
     overflow: hidden;
@@ -27,7 +31,7 @@ body {
 #form {
     padding: 0 0.5em 0 0.5em;
     margin:10em auto;
-    width: 20em;
+    width: 80%;
     overflow: hidden;
 }
 
@@ -35,7 +39,7 @@ body {
     background: #9098ad;
     border-style: none;
     font-size: 1em;
-    height: 2em;
+    height: 2.5em;
     width: 100%;
     margin-top: 0.2em;
 }
@@ -65,10 +69,15 @@ body {
     border-style: none;
     font-family: monospace;
     font-size: 1.5em;
-    height: 2em;
+    height: 2.5em;
     width: 100%;
+    margin-top: 2em;
+}
 
-    margin-top: 1em;
+@media (min-width: 640px) {
+    #form {
+        width: 20em;
+    }
 }
 
 </style>

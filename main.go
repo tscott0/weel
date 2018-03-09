@@ -24,14 +24,14 @@ func login(w http.ResponseWriter, r *http.Request) {
 	password := r.Form.Get("password")
 
 	if password != "hankscorpio" {
-		log.Println("Failed login attempt")
+		log.Println("login: Failed login attempt")
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
 
 	session, err := store.Get(r, "session")
 	if err != nil {
-		log.Println("Failed to get session")
+		log.Println("login: Failed to get session")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -48,7 +48,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 	// Check for session
 	session, err := store.Get(r, "session")
 	if err != nil {
-		log.Println("Failed to get session")
+		log.Println("home: Failed to get session")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -56,7 +56,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 	val := session.Values["logged_in"]
 	var loggedIn, ok bool
 	if loggedIn, ok = val.(bool); !ok || !loggedIn {
-		log.Println("User isn't logged in")
+		log.Println("home: User isn't logged in")
 		http.ServeFile(w, r, "login.html")
 		return
 	}
@@ -64,12 +64,12 @@ func home(w http.ResponseWriter, r *http.Request) {
 	val = session.Values["username"]
 	var username string
 	if username, ok = val.(string); !ok {
-		log.Println("Can't find username in session")
+		log.Println("home: Can't find username in session")
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
 
-	log.Println(username + "  logged in")
+	log.Printf("home: %q logged in", username)
 	http.ServeFile(w, r, "home.html")
 }
 

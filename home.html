@@ -2,12 +2,15 @@
 <html lang="en">
 <head>
 <title>weel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <script type="text/javascript">
+var xbtnClick;
+
 window.onload = function () {
     var conn;
     var msg = document.getElementById("msg");
     var log = document.getElementById("log");
-    var form = document.getElementById("form");
+    var menu = document.getElementById("menu");
     var buttons = document.getElementById("buttons");
     var logout = document.getElementById("logout");
 
@@ -69,9 +72,9 @@ window.onload = function () {
 
     log.onclick = function() { msg.focus(); };
     buttons.onclick = function() { msg.focus(); };
-    form.onclick = function() { msg.focus(); };
+    menu.onclick = function() { msg.focus(); };
 
-    form.onsubmit = function () {
+    menu.onsubmit = function () {
         if (!conn) {
             return false;
         }
@@ -84,20 +87,15 @@ window.onload = function () {
         return false;
     };
 
-    function xbtnClick(e) {
+    xbtnClick = function (e) {
         if (!conn) {
             return false;
         }
 
-        conn.send(e.toElement.value);
+        conn.send(e.text);
         msg.focus();
         return false;
     };
-
-    Array.from(document.getElementsByClassName("xbtn")).forEach(element => {
-        element.onclick = xbtnClick;
-        console.log(element.value);
-    });
 
     if (window["WebSocket"]) {
         startWs();
@@ -107,125 +105,167 @@ window.onload = function () {
         appendLog(item);
     }
 };
+
+
 </script>
 <style type="text/css">
 html {
     overflow: hidden;
 }
 
-body {
-    overflow: hidden;
-    padding: 0;
+html, body {
     margin: 0;
-    width: 100%;
     height: 100%;
+    width: 100%;
     background: #2b303b;
+}
+
+#log {
+    background: #414858;
+    padding: 1%;
+    box-sizing: border-box;
+    height: 40%;
+    overflow: auto;
+    font-family: sans-serif;
+    color: #cbd0cd;
+}
+
+#content {
+    padding: 1%;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+}
+
+#buttons {
+    background: #414858;
+    margin-top: 1%;
+    height: 50%;
+    font-family: sans-serif;
+    color: #cbd0cd;
+}
+
+.abtn {
+    background: #5e687f;
+    height: 92%;
+    width: 96%;
+    margin-right: 2%;
+    margin-bottom: 4%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+table { 
+    padding-left: 1%;
+    padding-top: 1%;
+    box-sizing: border-box;
+    width: 100%; 
+    height: 100%;
+}
+
+#menu {
+    box-sizing: border-box;
+    margin-top: 1%;
+    padding-bottom: 1%;
+    padding-right: 1%;
+    height: 8%;
+    overflow: hidden;
+    background: #414858;
+}
+
+.menu-button {
+    background: #5e687f;
+    color: #ebb322;
+    border-style: none;
+    padding: 1%;
+    box-sizing: border-box;
+    font-family: monospace;
+    font-size: 15px;
+    height: 100%;
+    width: 98%;
+    margin-right: -1%;
 }
 
 #msg {
     background: #9098ad;
     border-style: none;
-    padding: 3px;
+    width: 98%;
+    height: 96%;
+    padding: 1%;
+    box-sizing: border-box;
+    margin-left: 1%;
+    margin-right: 2%;
 }
 
-#log {
-    background: #414858;
-    margin: 0;
-    padding: 0.5em 0.5em 0.5em 0.5em;
-    position: absolute;
-    top: 0.5em;
-    left: 0.5em;
-    right: 20em;
-    bottom: 4em;
-    overflow: auto;
-    font-family: sans-serif;
-    color: #cbd0cd;
-}
+@media (max-width: 640px) {
+    .abtn {
+        font-size: 11px;
+    }
 
-#form {
-    margin: 0;
-    position: absolute;
-    bottom: 0.5em;
-    left: 0.5em;
-    right: 20em;
-    overflow: hidden;
-}
+    .menu-button {
+        font-size: 11px;
+    }
 
-#menu {
-    margin: 0;
-    position: absolute;
-    bottom: 0.5em;
-    right: 0.5em;
-    overflow: hidden;
-}
-
-.menu-button {
-    background: #414858;
-    color: #ebb322;
-    border-style: none;
-    padding: 3px;
-    font-family: monospace;
-    font-size: 1.5em;
-    height: 2.5em;
-    width: 5em;
-}
-
-#buttons {
-    background: #414858;
-    margin: 0;
-    padding: 0.5em 0.5em 0.5em 0.5em;
-    position: absolute;
-    top: 0.5em;
-    right: 0.5em;
-    bottom: 4em;
-    width: 18em;
-    overflow: auto;
-    font-family: sans-serif;
-    color: #cbd0cd;
-}
-
-.xbtn {
-    background: #414858;
-    color: #ebb322;
-    border-style: solid;
-    padding: 3px;
-    font-family: monospace;
-    font-size: 1em;
-    height: 5em;
-    width: 10.9em;
-    padding: 0em;
-    margin-bottom: 0.2em;
+    #log {
+        font-size: 12px;
+    }
 }
 
 </style>
 </head>
 <body>
-<div id="log"></div>
-<form id="form">
-    <input class="menu-button" type="submit" id="send" value="Send" />
-    <input type="text" id="msg" size="64"/>
-</form>
-<div id="menu">
-    <button class="menu-button" id="logout">Logout</button>
-</div>
-<div id="buttons">
-    <button class="xbtn" value="YES 👍">YES 👍</button>
-    <button class="xbtn" value="NO 👎">NO 👎</button>
-    <button class="xbtn" value="Need gun 🔫">Need gun 🔫</button>
-    <button class="xbtn" value="Need bag 🎒">Need bag 🎒</button>
-    <button class="xbtn" value="Need armor 🛡️">Need armor 🛡️</button>
-    <button class="xbtn" value="Need vehicle 🚙">Need vehicle 🚙</button>
-
-
-    <button class="xbtn" value="Enemy close 😨">Enemy close 😨</button>
-    <button class="xbtn" value="Let's move">Let's Move</button>
-    <button class="xbtn" value="Reloading 🔫">Reloading 🔫</button>
-
-    <button class="xbtn" value="No time! 🕗">No time! 🕗</button>
-    <button class="xbtn" value="Winner Winner 🐔">Winner Winner🐔</button>
-
-    <button class="xbtn" value="Found a vehicle 🚙">Found a vehicle 🚙</button>
-    
-</form>
+    <div id="content">
+        <div id="log"></div>
+        <div id="buttons">
+            <table>
+                <tr>
+                    <td><a class="abtn" onclick="xbtnClick(this);">YES 👍</a></td>
+                    <td><a class="abtn" onclick="xbtnClick(this);">NO 👎</a></td>
+                    <td><a class="abtn" onclick="xbtnClick(this);">MAYBE 🤷</a></td>
+                </tr>
+                <tr>
+                    <td><a class="abtn" onclick="xbtnClick(this);">Need gun 🔫</a></td>
+                    <td><a class="abtn" onclick="xbtnClick(this);">Need bag 🎒</a></td>
+                    <td><a class="abtn" onclick="xbtnClick(this);">Need armor 🛡️</a></td>
+                </tr>
+                <tr>
+                    <td><a class="abtn" onclick="xbtnClick(this);">Need helmet 🎩</a></td>
+                    <td><a class="abtn" onclick="xbtnClick(this);">Need ammo 💠</a></td>
+                    <td><a class="abtn" onclick="xbtnClick(this);">Need vehicle 🚙</a></td>
+                </tr>
+                <tr>
+                    <td><a class="abtn" onclick="xbtnClick(this);">Gun here 🔫</a></td>
+                    <td><a class="abtn" onclick="xbtnClick(this);">Bag here 🎒</a></td>
+                    <td><a class="abtn" onclick="xbtnClick(this);">Armor here 🛡️</a></td>
+                </tr>
+                <tr>
+                    <td><a class="abtn" onclick="xbtnClick(this);">Helmet here 🎩</a></td>
+                    <td><a class="abtn" onclick="xbtnClick(this);">Ammo here 💠</a></td>
+                    <td><a class="abtn" onclick="xbtnClick(this);">Vehicle here 🚙</a></td>
+                </tr>
+                <tr>
+                    <td><a class="abtn" onclick="xbtnClick(this);">No time! 🕗</a></td>
+                    <td><a class="abtn" onclick="xbtnClick(this);">Winner Winner🐔</a></td>
+                    <td><a class="abtn" onclick="xbtnClick(this);">Reloading 🔄</a></td>
+                </tr>
+                <tr>
+                    <td><a class="abtn" onclick="xbtnClick(this);">Enemy close ❗️</a></td>
+                    <td><a class="abtn" onclick="xbtnClick(this);">Let's Move 🏃</a></td>
+                    <td><a class="abtn" onclick="xbtnClick(this);">Under fire! 💥</a></td>
+                </tr>
+            </table>
+        </div>
+        <form id="menu">
+            <table>
+                <tr>
+                    <td><input class="menu-button" type="submit" id="send" value="Send" /></td>
+                    <td><input type="text" id="msg"/></td>
+                    <td><button class="menu-button" id="logout">Logout</button></td>
+                </tr>
+            </table>
+        </form>
+    </div>
 </body>
 </html>

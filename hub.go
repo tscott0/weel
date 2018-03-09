@@ -55,15 +55,9 @@ func (h *Hub) run() {
 
 // ServeHTTP handles websocket requests from the peer.
 func (h *Hub) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	conn, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
 	session, err := store.Get(r, "session")
 	if err != nil {
-		log.Println("Failed to get session")
+		log.Println("hub: Failed to get session")
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
@@ -72,7 +66,7 @@ func (h *Hub) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var loggedIn bool
 	var ok bool
 	if loggedIn, ok = val.(bool); !ok || !loggedIn {
-		log.Println("User isn't logged in")
+		log.Println("hub: User isn't logged in")
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
@@ -80,8 +74,14 @@ func (h *Hub) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	val = session.Values["username"]
 	var username string
 	if username, ok = val.(string); !ok {
-		log.Println("Can't find username in session")
+		log.Println("hub: Can't find username in session")
 		http.Redirect(w, r, "/", http.StatusFound)
+		return
+	}
+
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Println(err)
 		return
 	}
 
