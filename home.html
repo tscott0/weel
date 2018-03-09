@@ -60,8 +60,6 @@ window.onload = function () {
             }
         }
 
-        msg.focus();
-
         return conn;
     }
 
@@ -69,10 +67,6 @@ window.onload = function () {
         document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         window.location.replace("/");
     };
-
-    log.onclick = function() { msg.focus(); };
-    buttons.onclick = function() { msg.focus(); };
-    menu.onclick = function() { msg.focus(); };
 
     menu.onsubmit = function () {
         if (!conn) {
@@ -83,7 +77,7 @@ window.onload = function () {
         }
         conn.send(msg.value);
         msg.value = "";
-        msg.focus();
+        log.focus();
         return false;
     };
 
@@ -93,7 +87,6 @@ window.onload = function () {
         }
 
         conn.send(e.text);
-        msg.focus();
         return false;
     };
 
@@ -155,6 +148,7 @@ html, body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    user-select: none;
 }
 
 table { 
@@ -261,7 +255,7 @@ table {
             <table>
                 <tr>
                     <td><input class="menu-button" type="submit" id="send" value="Send" /></td>
-                    <td><input type="text" id="msg"/></td>
+                    <td><input type="text" id="msg" autocomplete="off"/></td>
                     <td><button class="menu-button" id="logout">Logout</button></td>
                 </tr>
             </table>
