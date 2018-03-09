@@ -26,6 +26,12 @@ window.onload = function () {
         return new Promise(resolve => setTimeout(resolve, ms));
     };
 
+    autoscroll = function() {
+        log.scrollTop = log.scrollHeight;
+        log.focus();
+        log.blur();
+    }
+
     function startWs() {
         connected = false;
         if (location.protocol == 'https:') {
@@ -58,6 +64,7 @@ window.onload = function () {
                 item.innerText = messages[i];
                 appendLog(item);
             }
+            autoscroll();
         }
 
         return conn;
@@ -68,6 +75,7 @@ window.onload = function () {
         window.location.replace("/");
     };
 
+
     menu.onsubmit = function () {
         if (!conn) {
             return false;
@@ -77,8 +85,7 @@ window.onload = function () {
         }
         conn.send(msg.value);
         msg.value = "";
-        log.focus();
-        log.blur();
+        autoscroll();
         return false;
     };
 
@@ -88,8 +95,7 @@ window.onload = function () {
         }
 
         conn.send(e.text);
-        log.focus();
-        log.blur();
+        autoscroll();
         return false;
     };
 
