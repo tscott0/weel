@@ -67,7 +67,6 @@ func (h *Hub) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var ok bool
 	if loggedIn, ok = val.(bool); !ok || !loggedIn {
 		log.Println("hub: User isn't logged in")
-		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
 
@@ -75,7 +74,6 @@ func (h *Hub) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var username string
 	if username, ok = val.(string); !ok {
 		log.Println("hub: Can't find username in session")
-		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
 

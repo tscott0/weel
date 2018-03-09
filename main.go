@@ -10,7 +10,8 @@ import (
 	"github.com/gorilla/sessions"
 )
 
-var store = sessions.NewCookieStore([]byte("mysecret")) // TODO: Read from environment
+var store *sessions.CookieStore
+var secretPassword string
 
 type User struct {
 	Username string `json:"username"`
@@ -23,7 +24,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	username := r.Form.Get("username")
 	password := r.Form.Get("password")
 
-	if password != "hankscorpio" {
+	if password != secretPassword {
 		log.Println("login: Failed login attempt")
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
@@ -38,6 +39,28 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	session.Values["logged_in"] = true
 	session.Values["username"] = username
+
+	session.Save(r, w)
+
+	http.Redirect(w, r, "/", http.StatusFound)
+}
+
+func logout(w http.ResponseWriter, r *http.Request) {
+	session, err := store.Get(r, "session")
+	if err != nil {
+		log.Println("logout: Failed to get session")
+		http.SetCookie(w,
+			&http.Cookie{
+				Name: "session",
+				Path: "/",
+			},
+		)
+
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	session.Values["logged_in"] = false
 
 	session.Save(r, w)
 
@@ -83,14 +106,27 @@ func main() {
 
 	r.HandleFunc("/", home).Methods("GET")
 	r.HandleFunc("/login", login).Methods("POST")
+	r.HandleFunc("/logout", logout).Methods("GET")
 	r.Handle("/ws", hub)
 
 	var err error
-	port := os.Getenv("PORT")
 
+	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("$PORT must be set")
 	}
+
+	cookieSecret := os.Getenv("COOKIE_SECRET")
+	if port == "" {
+		log.Fatal("$COOKIE_SECRET must be set")
+	}
+
+	secretPassword = os.Getenv("PASSWORD")
+	if secretPassword == "" {
+		log.Fatal("$PASSWORD must be set")
+	}
+
+	store = sessions.NewCookieStore([]byte(cookieSecret))
 
 	log.Println("Starting server on port " + port)
 	err = http.ListenAndServe(":"+port, r)
