@@ -3,6 +3,7 @@
 <head>
 <title>weel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="static/NoSleep.min.js"></script>
 <script type="text/javascript">
 var xbtnClick;
 
@@ -13,6 +14,7 @@ window.onload = function () {
     var menu = document.getElementById("menu");
     var buttons = document.getElementById("buttons");
     var logout = document.getElementById("logout");
+    var noSleep = new NoSleep();
 
     function appendLog(item) {
         var doScroll = log.scrollTop > log.scrollHeight - log.clientHeight - 1;
@@ -93,6 +95,8 @@ window.onload = function () {
         if (!conn) {
             return false;
         }
+
+        noSleep.enable();
 
         conn.send(e.text);
         autoscroll();
@@ -217,6 +221,7 @@ table {
 }
 
 </style>
+
 </head>
 <body>
     <div id="content">

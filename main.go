@@ -108,6 +108,8 @@ func main() {
 	r.HandleFunc("/login", login).Methods("POST")
 	r.HandleFunc("/logout", logout).Methods("GET")
 	r.Handle("/ws", hub)
+	s := http.StripPrefix("/static/", http.FileServer(http.Dir("./static/")))
+	r.PathPrefix("/static/").Handler(s)
 
 	var err error
 
