@@ -15,8 +15,7 @@ type Message struct {
 }
 
 func (m *Message) Write(w io.WriteCloser) {
-	message := fmt.Sprintf("%s %s %s :  %s",
-		m.remoteAddr.String(),
+	message := fmt.Sprintf("%s %s :  %s",
 		m.timestamp.Format("15:04:05"),
 		m.sender,
 		m.content,
